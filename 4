@@ -1,0 +1,8 @@
+4) 1. TABLES CREATE TABLE Book ( Bookid INT PRIMARY KEY, Book_name VARCHAR(50), Publication VARCHAR(50), Price INT ); CREATE TABLE User ( Userid INT PRIMARY KEY, Name VARCHAR(50), Bookid INT, FOREIGN KEY (Bookid) REFERENCES Book(Bookid) ); 2. INSERT DATA  BOOK TABLE  INSERT INTO Book VALUES (101,'DBMS','Wiley',600), (102,'OS','Pearson',500), (103,'AI','Wiley',800), (104,'CN','McGrawHill',700); USER TABLE  INSERT INTO User VALUES (1,'Arun',101), (2,'Bala',103), (3,'Cathy',102), (4,'David',104);
+
+3. QUERIES 
+(a) User who accessed costliest book SELECT Name FROM User U, Book B WHERE U.Bookid = B.Bookid AND Price = (SELECT MAX(Price) FROM Book); 
+(b) User id + count of books SELECT Userid, COUNT(*) FROM User GROUP BY Userid; 
+(c) Books published by Wiley SELECT * FROM Book WHERE Publication='Wiley';
+
+4. FUNCTION DELIMITER $$ CREATE FUNCTION GetPrice(bid INT) RETURNS INT BEGIN RETURN (SELECT Price FROM Book WHERE Bookid=bid); END $$ DELIMITER ; CALL FUNCTION SELECT GetPrice(103); 
