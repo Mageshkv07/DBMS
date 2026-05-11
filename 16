@@ -1,0 +1,51 @@
+16)	1. TABLES
+CREATE TABLE order_master ( Orderno INT PRIMARY KEY,
+Vencode VARCHAR(10), Ordstatus VARCHAR(20), Delv_date DATE
+);
+
+CREATE TABLE order_detail ( Orderno INT,
+Itemcode INT, Qty_ord INT, Qty_deld INT,
+FOREIGN KEY (Orderno) REFERENCES order_master(Orderno)
+);
+
+
+2.	INSERT
+INSERT INTO order_master VALUES (101,'V001','Delivered','2006-02-10'),
+(102,'V004','Pending','2006-03-15'),
+(103,'V004','Pending','2006-06-20'),
+(104,'V002','Delivered','2006-07-10');
+
+INSERT INTO order_detail VALUES (101,1,10,10),
+(102,2,20,10),
+(103,3,15,0),
+(104,4,25,25);
+
+
+3.	QUERIES
+
+(a)	Orders handled by vendor V004 ordered by delivery date
+SELECT *
+FROM order_master WHERE Vencode = 'V004' ORDER BY Delv_date;
+
+(b)	Orders placed between 01-Jan-2006 and 01-Jul-2006
+SELECT *
+FROM order_master
+WHERE Delv_date BETWEEN '2006-01-01' AND '2006-07-01';
+
+(c)	Pending orders
+ 
+SELECT *
+FROM order_master
+WHERE Ordstatus = 'Pending';
+
+
+4.	PROCEDURE (Leap Year Check – MySQL)
+DELIMITER $$
+
+CREATE PROCEDURE CheckLeapYear(IN yr INT) BEGIN
+IF (yr % 400 = 0) OR (yr % 4 = 0 AND yr % 100 != 0) THEN SELECT 'LEAP YEAR' AS Result;
+ELSE
+SELECT 'NOT LEAP YEAR' AS Result; END IF;
+END $$ DELIMITER ;
+Call Procedure
+CALL CheckLeapYear(2024);
