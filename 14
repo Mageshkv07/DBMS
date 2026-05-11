@@ -1,0 +1,50 @@
+14)	1. TABLES
+CREATE TABLE Course ( Ccode INT PRIMARY KEY,
+Course_name VARCHAR(50)
+);
+
+CREATE TABLE Student ( Rollno INT PRIMARY KEY, Name VARCHAR(50),
+Coursecode INT, Mark1 INT, Mark2 INT,
+FOREIGN KEY (Coursecode) REFERENCES Course(Ccode)
+);
+
+
+2.	INSERT
+INSERT INTO Course VALUES (1,'CSE'),
+(2,'IT'),
+(3,'ECE');
+
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2) VALUES (101,'Arun',1,80,85),
+(102,'Bala',2,70,75),
+(103,'Charan',1,90,88),
+(104,'Divya',3,85,80),
+(105,'Esha',2,78,82);
+
+
+3.	QUERIES
+
+(a)	Add TOTAL field to Student
+ALTER TABLE Student ADD Total INT;
+
+(b)	Insert 5 records (already done above)
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2,Total) VALUES (101,'Arun',1,80,85,165),
+(102,'Bala',2,70,75,145),
+(103,'Charan',1,90,88,178),
+(104,'Divya',3,85,80,165),
+(105,'Esha',2,78,82,160);
+
+(c)	Student names with course names
+ 
+SELECT S.Name, C.Course_name FROM Student S, Course C WHERE S.Coursecode = C.Ccode;
+
+4.	PL/SQL / MYSQL PROCEDURE
+DELIMITER $$
+
+CREATE PROCEDURE OddEven(IN num INT) BEGIN
+IF num % 2 = 0 THEN
+SELECT 'EVEN NUMBER' AS Result; ELSE
+SELECT 'ODD NUMBER' AS Result; END IF;
+END $$ DELIMITER ;
+Call Procedure
+CALL OddEven(10);
+ 
