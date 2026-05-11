@@ -1,16 +1,73 @@
-6) 
-1. TABLES 
-CREATE TABLE Customer ( Custid INT PRIMARY KEY, Custname VARCHAR(50), phno VARCHAR(15), pan VARCHAR(20), DOB DATE );
-CREATE TABLE HomeLoan ( HLoanid INT PRIMARY KEY, Amount DECIMAL(10,2), Custid INT, FOREIGN KEY (Custid) REFERENCES Customer(Custid) ); 
-CREATE TABLE VehicleLoan ( VLoanid INT PRIMARY KEY, Amount DECIMAL(10,2), Custid INT, FOREIGN KEY (Custid) REFERENCES Customer(Custid) );
-
-2.
-INSERT DATA INSERT INTO Customer VALUES (1,'Arun','9876543210','ABCDE1234F','1998-05-10'), (2,'Bala','9876543211','PQRSX5678K','1997-08-15'), (3,'Charan','9876543212','LMNOP4321Z','1999-02-20'), (4,'Divya','9876543213','ASDFG9876H','2000-11-25'); 
-INSERT INTO HomeLoan VALUES (101,500000,1), (102,700000,2); 
-INSERT INTO VehicleLoan VALUES (201,200000,1), (202,300000,3);
-
+ 
+6)
+CREATE TABLE Customer ( 
+  Custid INT PRIMARY KEY , 
+  Custname VARCHAR(50),         
+  phno VARCHAR(15),  
+  pan VARCHAR(20), 
+  DOB DATE 
+); 
+ 
+CREATE TABLE HomeLoan ( 
+  HLoanid INT PRIMARY KEY, 
+  Amount DECIMAL(10,2), 
+  Custid INT, 
+  FOREIGN KEY (Custid) REFERENCES Customer(Custid) 
+); 
+ 
+CREATE TABLE VehicleLoan ( 
+  VLoanid INT PRIMARY KEY, 
+  Amount DECIMAL(10,2), 
+  Custid INT, 
+  FOREIGN KEY (Custid) REFERENCES Customer(Custid) 
+); 
+2. INSERT DATA 
+INSERT INTO Customer VALUES 
+(1,'Arun','9876543210','ABCDE1234F','1998-05-10'), 
+(2,'Bala','9876543211','PQRSX5678K','1997-08-15'), 
+(3,'Charan','9876543212','LMNOP4321Z','1999-02-20'), 
+(4,'Divya','9876543213','ASDFG9876H','2000-11-25'); 
+ 
+INSERT INTO HomeLoan VALUES 
+(101,500000,1), 
+(102,700000,2); 
+ 
+INSERT INTO VehicleLoan VALUES 
+(201,200000,1), 
+(202,300000,3); 
 3. QUERIES 
-(a) Custid of customers who have BOTH HomeLoan and VehicleLoan SELECT Custid FROM HomeLoan INTERSECT SELECT Custid FROM VehicleLoan; 
-(b) Custid of customers who do NOT have any loan SELECT Custid FROM Customer WHERE Custid NOT IN (   SELECT Custid FROM HomeLoan   UNION   SELECT Custid FROM VehicleLoan ); 
-(c) VIEW (Customer id, name, total loan amount) CREATE VIEW LoanView AS SELECT c.Custid,       c.Custname,       h.Amount + v.Amount AS TotalLoan FROM Customer c JOIN HomeLoan h ON c.Custid = h.Custid JOIN VehicleLoan v ON c.Custid = v.Custid; View Output SELECT * FROM LoanView; 
-(d) TRIGGER (Display HomeLoan details after insert) DELIMITER $$  CREATE TRIGGER ShowHomeLoan AFTER INSERT ON HomeLoan FOR EACH ROW BEGIN   SELECT NEW.HLoanid AS LoanID,          NEW.Amount AS LoanAmount,          NEW.Custid AS CustomerID; END $$  DELIMITER ; 
+(a)	Custid of customers who have BOTH HomeLoan and VehicleLoan 
+SELECT Custid FROM HomeLoan 
+INTERSECT 
+SELECT Custid FROM VehicleLoan; 
+ 
+(b)	Custid of customers who do NOT have any loan 
+SELECT Custid 
+FROM Customer 
+WHERE Custid NOT IN ( 
+  SELECT Custid FROM HomeLoan 
+  UNION 
+  SELECT Custid FROM VehicleLoan 
+); 
+(c)	VIEW (Customer id, name, total loan amount) 
+CREATE VIEW LoanView AS SELECT c.Custid,   c.Custname, 
+      h.Amount + v.Amount AS TotalLoan 
+FROM Customer c 
+JOIN HomeLoan h ON c.Custid = h.Custid 
+JOIN VehicleLoan v ON c.Custid = v.Custid; 
+View Output 
+SELECT * FROM LoanView; 
+(d) TRIGGER (Display HomeLoan details after insert) 
+DELIMITER $$ 
+ 
+CREATE TRIGGER ShowHomeLoan 
+AFTER INSERT ON HomeLoan 
+FOR EACH ROW 
+BEGIN 
+  SELECT NEW.HLoanid AS LoanID, 
+         NEW.Amount AS LoanAmount, 
+         NEW.Custid AS CustomerID; 
+END $$ 
+ 
+DELIMITER ; 
+ 
