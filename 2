@@ -1,14 +1,63 @@
-2) 1. TABLES
-CREATE TABLE Dept (
-Deptno INT PRIMARY KEY, Dname VARCHAR(50), Loc VARCHAR(50), DeptmanagerId INT ); 
-CREATE TABLE Employee (
-EmpId INT PRIMARY KEY, Empname VARCHAR(50), Sal INT, Deptno INT, FOREIGN KEY (Deptno) REFERENCES Dept(Deptno) );
+2)
+1.	TABLES
+CREATE TABLE Dept ( Deptno INT PRIMARY KEY, Dname VARCHAR(50),
+Loc VARCHAR(50),
+DeptmanagerId INT
+);
 
-2. INSERT DATA INSERT INTO Dept VALUES (10,'HR','Chennai',1), (20,'IT','Bangalore',2), (30,'Sales','Delhi',3); INSERT INTO Employee VALUES (1,'Arun',50000,10), (2,'Bala',60000,20), (3,'Cathy',55000,30), (4,'David',40000,10), (5,'Esha',70000,20);
+CREATE TABLE Employee ( EmpId INT PRIMARY KEY,
+Empname VARCHAR(50), Sal INT,
+Deptno INT,
+FOREIGN KEY (Deptno) REFERENCES Dept(Deptno)
+);
 
-3. QUERIES 
-(a) Count & Average Salary SELECT Deptno, COUNT(*), AVG(Sal) FROM Employee GROUP BY Deptno; 
-(b) Employee + Department + Salary SELECT Empname, Dname, Sal FROM Employee E, Dept D WHERE E.Deptno = D.Deptno; 
-(c) Employee & Manager Name SELECT E.Empname, M.Empname FROM Employee E, Dept D, Employee M WHERE E.Deptno = D.Deptno AND D.DeptmanagerId = M.EmpId; 
 
-4. FUNCTION DELIMITER $$ CREATE FUNCTION GetSalary(id INT) RETURNS INT BEGIN DECLARE s INT DEFAULT 0; SELECT Sal INTO s FROM Employee WHERE EmpId = id; RETURN s; END $$ DELIMITER ; CALL FUNCTION SELECT GetSalary(1); 
+2.	INSERT DATA
+INSERT INTO Dept VALUES (10,'HR','Chennai',1),
+(20,'IT','Bangalore',2),
+(30,'Sales','Delhi',3);
+
+INSERT INTO Employee VALUES (1,'Arun',50000,10),
+(2,'Bala',60000,20),
+(3,'Cathy',55000,30),
+(4,'David',40000,10),
+(5,'Esha',70000,20);
+
+
+3.	QUERIES
+
+(a)	Count & Average Salary
+SELECT Deptno, COUNT(*), AVG(Sal)
+FROM Employee GROUP BY Deptno;
+
+
+
+
+
+(b)	Employee + Department + Salary
+SELECT Empname, Dname, Sal FROM Employee E, Dept D WHERE E.Deptno = D.Deptno;
+ 
+
+
+
+(c)	Employee & Manager Name
+SELECT E.Empname, M.Empname FROM Employee E, Dept D, Employee M WHERE E.Deptno = D.Deptno
+AND D.DeptmanagerId = M.EmpId;
+
+
+
+4.	FUNCTION
+DELIMITER $$
+
+CREATE FUNCTION GetSalary(id INT) RETURNS INT
+BEGIN
+DECLARE s INT DEFAULT 0;
+
+SELECT Sal INTO s
+FROM Employee WHERE EmpId = id;
+
+RETURN s;
+END $$ DELIMITER ;
+CALL FUNCTION
+SELECT GetSalary(1);
+ 
