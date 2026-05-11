@@ -1,0 +1,58 @@
+13)	1. TABLES
+CREATE TABLE Department ( Deptno INT PRIMARY KEY, Dname VARCHAR(50),
+Dloc VARCHAR(50)
+);
+
+CREATE TABLE Employee ( Empno INT PRIMARY KEY, Ename VARCHAR(50),
+Job VARCHAR(50),
+MgrId INT, DoB DATE, DoJ DATE,
+Sal DECIMAL(10,2), Comm DECIMAL(10,2),
+Deptno INT,
+FOREIGN KEY (Deptno) REFERENCES Department(Deptno)
+);
+
+
+2.	INSERT
+INSERT INTO Department VALUES (10,'Marketing','Chennai'),
+(20,'HR','Mumbai'),
+(30,'IT','Bangalore');
+
+INSERT INTO Employee VALUES
+(1,'Arun','Manager',NULL,'1995-05-10','2020-06-01',50000,5000,10),
+(2,'Bala','Analyst',1,'1998-07-15','2021-08-10',40000,3000,20),
+(3,'Charan','Developer',1,'1997-05-20','2022-01-05',45000,4000,10);
+
+
+3.	QUERIES
+
+(a)	Emp no, name, salary and experience ordered by salary (desc)
+SELECT Empno, Ename, Sal,
+TIMESTAMPDIFF(YEAR, DoJ, CURDATE()) AS Experience
+FROM Employee ORDER BY Sal DESC;
+
+(b)	Employees working in Marketing department
+SELECT E.Ename
+FROM Employee E, Department D WHERE E.Deptno = D.Deptno AND D.Dname = 'Marketing';
+ 
+(c)	Employees born in current month
+SELECT Ename FROM Employee
+WHERE MONTH(DoB) = MONTH(CURDATE());
+
+
+4.	EMPLOYEE REGISTRATION FORM
+
+Create table (form storage)
+CREATE TABLE EmployeeForm ( Empno INT PRIMARY KEY, Ename VARCHAR(50),
+Job VARCHAR(50), DoB DATE,
+DoJ DATE,
+Sal DECIMAL(10,2),
+Deptno INT
+);
+
+Insert (form submission)
+INSERT INTO EmployeeForm VALUES (1,'Arun','Manager','1995-05-10','2020-06-01',50000,10),
+(2,'Bala','Analyst','1998-07-15','2021-08-10',40000,20);
+
+Display employees
+SELECT * FROM EmployeeForm;
+ 
