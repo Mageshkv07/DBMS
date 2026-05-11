@@ -1,0 +1,60 @@
+15)	1. TABLES
+CREATE TABLE Department ( Depno INT PRIMARY KEY,
+Depname VARCHAR(50), Deplocation VARCHAR(50)
+);
+
+CREATE TABLE Employee ( Empno INT PRIMARY KEY,
+Empname VARCHAR(50), DOJ DATE,
+Salary DECIMAL(10,2),
+Depno INT,
+FOREIGN KEY (Depno) REFERENCES Department(Depno)
+);
+
+
+2.	INSERT
+INSERT INTO Department VALUES (10,'HR','Chennai'),
+(20,'IT','Bangalore'),
+(30,'Sales','Mumbai');
+
+INSERT INTO Employee VALUES (1,'Arun','2020-06-01',50000,10),
+(2,'Bala','2021-08-10',40000,20),
+(3,'Charan','2019-01-15',60000,10),
+(4,'Divya','2022-05-20',45000,20);
+
+
+3.	QUERIES
+
+(a)	Number of employees in each department (deptno desc)
+SELECT Depno, COUNT(*) AS Total_Employees FROM Employee
+GROUP BY Depno ORDER BY Depno DESC;
+
+(b)	Departments having at least one employee
+SELECT DISTINCT D.Depname
+FROM Department D, Employee E WHERE D.Depno = E.Depno;
+
+(c)	Employee name, DOJ and experience (years)
+SELECT Empname, DOJ,
+ 
+TIMESTAMPDIFF(YEAR, DOJ, CURDATE()) AS Years_Completed
+FROM Employee;
+
+
+4.	EMPLOYEE FORM
+
+Create table
+CREATE TABLE EmployeeForm ( Empno INT PRIMARY KEY,
+Empname VARCHAR(50), DOJ DATE,
+Salary DECIMAL(10,2),
+Depno INT
+);
+
+Insert
+INSERT INTO EmployeeForm VALUES (1,'Arun','2020-06-01',50000,10),
+(2,'Bala','2021-08-10',40000,20);
+
+Display employee details
+SELECT * FROM EmployeeForm;
+
+Delete employee record
+DELETE FROM EmployeeForm WHERE Empno = 2;
+ 
