@@ -1,8 +1,49 @@
-3) 1. TABLES CREATE TABLE Booth ( Boothid INT PRIMARY KEY, Location VARCHAR(50), BIncharge VARCHAR(50) ); CREATE TABLE Voter ( VoterId INT PRIMARY KEY, Votername VARCHAR(50), Gender VARCHAR(10), Boothid INT, Checkvote INT,   -- 1 = voted, 0 = not voted FOREIGN KEY (Boothid) REFERENCES Booth(Boothid) ); 
+3)
 
-2. QUERIES 
-(a) Count of voters in each booth SELECT Boothid, COUNT(*) AS Total_Voters FROM Voter GROUP BY Boothid; 
-(b) Total voters who voted SELECT COUNT(*) AS Total_Voted FROM Voter WHERE Checkvote = 1; 
-(c) Booth details with voted count SELECT B.Boothid, B.Location, COUNT(V.VoterId) AS Voted_Count FROM Booth B, Voter V WHERE B.Boothid = V.Boothid AND V.Checkvote = 1 GROUP BY B.Boothid, B.Location;  
+1.	TABLES
+CREATE TABLE Booth ( Boothid INT PRIMARY KEY,
+Location VARCHAR(50), BIncharge VARCHAR(50)
+);
 
-3. FUNCTION (Poll Percentage) DELIMITER $$  CREATE FUNCTION PollPercent(bid INT) RETURNS DECIMAL(5,2) BEGIN   RETURN (     SELECT (SUM(Checkvote = 1) * 100.0) / COUNT(*)     FROM Voter     WHERE Boothid = bid   ); END $$  DELIMITER ;   CALL FUNCTION SELECT PollPercent(1); 
+CREATE TABLE Voter ( VoterId INT PRIMARY KEY,
+Votername VARCHAR(50), Gender VARCHAR(10),
+Boothid INT,
+Checkvote INT, -- 1 = voted, 0 = not voted
+FOREIGN KEY (Boothid) REFERENCES Booth(Boothid)
+);
+
+
+
+2.	QUERIES
+
+(a)	Count of voters in each booth
+SELECT Boothid, COUNT(*) AS Total_Voters FROM Voter
+GROUP BY Boothid;
+
+
+(b)	Total voters who voted
+SELECT COUNT(*) AS Total_Voted FROM Voter
+WHERE Checkvote = 1;
+
+
+(c)	Booth details with voted count
+SELECT B.Boothid, B.Location, COUNT(V.VoterId) AS Voted_Count FROM Booth B, Voter V
+WHERE B.Boothid = V.Boothid AND V.Checkvote = 1
+GROUP BY B.Boothid, B.Location;
+ 
+
+3.	FUNCTION (Poll Percentage)
+DELIMITER $$
+
+CREATE FUNCTION PollPercent(bid INT) RETURNS DECIMAL(5,2)
+BEGIN RETURN (
+SELECT (SUM(Checkvote = 1) * 100.0) / COUNT(*)
+FROM Voter
+WHERE Boothid = bid
+);
+END $$ DELIMITER ;
+
+
+CALL FUNCTION
+SELECT PollPercent(1);
+ 
