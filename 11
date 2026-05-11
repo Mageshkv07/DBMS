@@ -1,0 +1,52 @@
+11)	1. TABLES
+CREATE TABLE Department ( DeptID INT PRIMARY KEY,
+Dept_Name VARCHAR(50), HoD VARCHAR(50)
+);
+
+CREATE TABLE Student ( Regno INT PRIMARY KEY, Name VARCHAR(50), Gender VARCHAR(10), DeptID INT,
+FOREIGN KEY (DeptID) REFERENCES Department(DeptID)
+);
+
+
+2.	INSERT
+INSERT INTO Department VALUES (1,'CSE','Dr. Kumar'),
+(2,'IT','Dr. Suresh'),
+(3,'ECE','Dr. Ram');
+
+INSERT INTO Student VALUES (101,'Arun','M',1),
+(102,'Bala','M',1),
+(103,'Charan','M',2),
+(104,'Divya','F',3);
+
+
+3.	QUERIES
+
+(a)	View for CSE Department students
+CREATE VIEW CSE_Dept AS SELECT *
+FROM Student WHERE DeptID = 1;
+
+(b)	Department-wise student count (descending order)
+SELECT DeptID, COUNT(*) AS Total_Students FROM Student
+GROUP BY DeptID
+ORDER BY Total_Students DESC;
+
+(c)	Student name with Department name and HoD
+SELECT S.Name, D.Dept_Name, D.HoD
+ 
+FROM Student S, Department D WHERE S.DeptID = D.DeptID;
+
+4.	REGISTRATION FORM
+
+Create table
+CREATE TABLE StudentRegistration ( Regno INT PRIMARY KEY,
+Name VARCHAR(50), Gender VARCHAR(10), DeptID INT,
+PhoneNo VARCHAR(15)
+);
+
+Insert
+INSERT INTO StudentRegistration VALUES (101,'Arun','M',1,'9876543210'),
+(102,'Bala','M',1,'9123456780');
+
+Display registered students
+SELECT * FROM StudentRegistration;
+ 
