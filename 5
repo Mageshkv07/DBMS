@@ -1,10 +1,100 @@
-5) 1. TABLES CREATE TABLE Customer ( Custid INT PRIMARY KEY, Custname VARCHAR(50), Addr VARCHAR(100), phno VARCHAR(15), panno VARCHAR(15) ); CREATE TABLE Loan ( Loanid INT PRIMARY KEY, Amount INT, Interest INT, Custid INT, FOREIGN KEY (Custid) REFERENCES Customer(Custid) ); CREATE TABLE Account ( Acctno INT PRIMARY KEY, Accbal INT, Custid INT, FOREIGN KEY (Custid) REFERENCES Customer(Custid) ); 
-
-2. INSERT DATA INSERT INTO Customer VALUES (1,'ARUN','Chennai','9876543210','PAN1'), (2,'BALA','Chennai','9123456780','PAN2'), (3,'CATHY','Madurai','9988776655','PAN3'), (4,'DAVID','Delhi','9090909090','PAN4'); INSERT INTO Loan VALUES (101,50000,5,1), (102,80000,6,2), (103,60000,4,3), (104,40000,3,4); INSERT INTO Account VALUES (201,30000,1), (202,90000,2), (203,50000,3), (204,20000,4); 
-
+5)
+1. 
+CREATE TABLE Customer ( 
+Custid INT PRIMARY KEY, 
+Custname VARCHAR(50), Addr VARCHAR(100), phno VARCHAR(15), panno VARCHAR(15) 
+); 
+ 
+CREATE TABLE Loan ( 
+Loanid INT PRIMARY KEY, 
+Amount INT, 
+Interest INT, 
+Custid INT, 
+FOREIGN KEY (Custid) REFERENCES Customer(Custid) 
+); 
+ 
+CREATE TABLE Account ( 
+Acctno INT PRIMARY KEY, 
+Accbal INT, 
+Custid INT, 
+FOREIGN KEY (Custid) REFERENCES Customer(Custid) 
+); 
+2. INSERT DATA 
+INSERT INTO Customer VALUES 
+(1,'ARUN','Chennai','9876543210','PAN1'), 
+(2,'BALA','Chennai','9123456780','PAN2'), 
+(3,'CATHY','Madurai','9988776655','PAN3'), 
+(4,'DAVID','Delhi','9090909090','PAN4'); 
+ 
+INSERT INTO Loan VALUES 
+(101,50000,5,1), 
+(102,80000,6,2), 
+(103,60000,4,3), 
+(104,40000,3,4); 
+ 
+INSERT INTO Account VALUES 
+(201,30000,1), 
+(202,90000,2), 
+(203,50000,3), 
+(204,20000,4); 
+ 
 3. QUERIES 
-(a) Account balance of ARUN SELECT Accbal FROM Account WHERE Custid = (SELECT Custid FROM Customer WHERE Custname='ARUN'); 
-(b) Update interest (1%) UPDATE Loan SET Interest = 1 WHERE Custid IN ( SELECT Custid FROM Account WHERE Accbal > 0.5 * Amount );
-(c) View (Account + Loan) CREATE VIEW Cust_View AS SELECT Customer.Custname, Account.Accbal, Loan.Amount FROM Customer, Account, Loan WHERE Customer.Custid = Account.Custid AND Customer.Custid = Loan.Custid; Display View SELECT * FROM Cust_View; 
-
-4. TRIGGER Step 1: Log Table CREATE TABLE Account_Log ( Acctno INT, Accbal INT ); Step 2: Trigger DELIMITER $$ CREATE TRIGGER after_account_update AFTER UPDATE ON Account FOR EACH ROW BEGIN INSERT INTO Account_Log VALUES (NEW.Acctno, NEW.Accbal); END $$ DELIMITER ; 
+ 
+(a)	Account balance of ARUN 
+SELECT Accbal 
+FROM Account 
+WHERE Custid = (SELECT Custid FROM Customer WHERE Custname='ARUN'); 
+ 
+(b)	Update interest (1%) 
+UPDATE Loan 
+SET Interest = 1 
+WHERE Custid IN ( 
+SELECT Custid FROM Account 
+WHERE Accbal > 0.5 * Amount 
+); 
+ 
+(c)	View (Account + Loan) 
+CREATE VIEW Cust_View AS 
+SELECT Customer.Custname, Account.Accbal, Loan.Amount 
+FROM Customer, Account, Loan 
+WHERE Customer.Custid = Account.Custid 
+AND Customer.Custid = Loan.Custid; 
+ 
+Display View 
+SELECT * FROM Cust_View; 
+ 
+4. TRIGGER 
+Step 1: Log Table 
+CREATE TABLE Account_Log ( 
+Acctno INT, 
+Accbal INT 
+); 
+ 
+ 
+Step 2: Trigger 
+DELIMITER $$ 
+ 
+CREATE TRIGGER after_account_update 
+AFTER UPDATE ON Account 
+FOR EACH ROW 
+BEGIN 
+INSERT INTO Account_Log VALUES (NEW.Acctno, NEW.Accbal); 
+END $$ 
+ 
+DELIMITER ; 
+ 
+STEP-BY-STEP OUTPUT PROCESS For trigger(*Not part of the program) 
+1.	First check original data 
+SELECT * FROM Account; 
+ 
+2.	Perform UPDATE (this activates trigger) 
+UPDATE Account 
+SET Accbal = 75000 
+WHERE Acctno = 201; 
+ 
+3.	NOW check output (Log table) 
+SELECT * FROM Account_Log; 
+EXPECTED OUTPUT 
+If trigger works, you will see: 
+Acctno   Accbal 
+201      75000 
