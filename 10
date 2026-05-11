@@ -1,0 +1,59 @@
+10)	1. TABLES
+CREATE TABLE Marks ( Regno INT PRIMARY KEY, Name VARCHAR(50), Dept VARCHAR(20),
+Subj1 INT, Subj2 INT, Subj3 INT
+);
+
+2.	INSERT
+(1,'Arun','CSE',80,85,90),
+(2,'Bala','CSE',70,75,80),
+(3,'Charan','IT',90,88,95);
+
+
+3.	QUERIES
+
+(a)	Add Total column and update it
+ALTER TABLE Marks ADD Total INT;
+
+UPDATE Marks
+SET Total = Subj1 + Subj2 + Subj3;
+
+
+(b)	Find second maximum total
+SELECT MAX(Total) AS Second_Max_Total FROM Marks
+WHERE Total < (SELECT MAX(Total) FROM Marks);
+
+
+(c)	Student with maximum total
+SELECT Name FROM Marks
+WHERE Total = (SELECT MAX(Total) FROM Marks);
+
+
+(d)	PL/SQL
+DELIMITER $$
+
+CREATE PROCEDURE StudentReport() BEGIN
+DECLARE done INT DEFAULT 0;
+ 
+DECLARE rno INT;
+DECLARE sname VARCHAR(50); DECLARE dpt VARCHAR(20); DECLARE t INT;
+
+DECLARE cur CURSOR FOR
+SELECT Regno, Name, Dept, Total FROM Marks;
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+OPEN cur; read_loop: LOOP
+FETCH cur INTO rno, sname, dpt, t;
+
+IF done = 1 THEN LEAVE read_loop;
+END IF;
+
+SELECT rno AS Regno, sname AS Name, dpt AS Dept, t AS Total; END LOOP;
+
+CLOSE cur; END $$
+
+DELIMITER ;
+
+
+Call Procedure:
+CALL StudentReport();
+ 
